@@ -2,6 +2,8 @@ package br.com.dio.service;
 
 import java.util.List;
 
+import br.com.dio.exceptions.ProductNullException;
+import br.com.dio.exceptions.ProductPriceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,11 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository repository;
 
-	public Produto save(Produto produto) {
+	public Produto save(Produto produto) throws Exception {
+		if(produto.getNome() == null || produto.getPreco() == null)
+			throw new ProductNullException(); // tratando exceção de forma personalizada. Joga para o classe criado no package exceptions
+		if(produto.getPreco() < 0)
+			throw new ProductPriceException();
 		return repository.save(produto);
 	}
 
